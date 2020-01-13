@@ -1,0 +1,94 @@
+\section*{Materiais e Métodos}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% VISÃO GERAL
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Visão Geral}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/dl_diagram.pdf}
+    \caption{Fluxograma do desenvolvimento do modelo}
+    \label{fig:fluxogram}
+\end{figure}
+
+Pelo fluxograma da figura \ref{fig:fluxogram} vemos que a primeira etapa no desenvolvimento da Rede Neural Convolucional é a aquisição e o pré-processamento dos dados. A criação da estrutura (sequência de camadas da rede neural) e o ajuste dos hiperparâmetros, também chamdo de \emph{fine tunning}, vem em seguida. É o treimento que une a primeira e a segunda etapa, pois é nele que os dados pré-processados são inseridos na estrutura modelada. Logo em seguida é feita uma validação da rede treinada. É o desempenho da modelagem anterior que dá o \emph{feedback} das modificações necessárias para próxima estrutura. O desenvolvimento do modelo termina quando é atingida uma boa acurácia de predição.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% AQUISIÇÃO DOS DADOS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Aquisição dos dados}
+
+Dados de treinamento são elementos fundamentais para o treinamento supervisionado de uma Rede Neural Artificial. Para treinar uma rede que aprenda a classificar galáxias de acordo com suas imagens é necessário fazê-la aprender formas e padrões das galáxias. Para isso, é necessário separar uma grande amostra de imagens de galáxias já classificadas por humanos.
+
+A fonte dos dados são GalaxyZoo, que contém as classificações morfológicas, e SDSS, que possui as imagens das galáxias. A associação dos dados entre estas duas fontes são feitas pelas coordenadas do objeto no espaço.
+
+O catálogo com as classificações estão em um arquivo CSV. Já as imagens foram obtidas baixando cortes de imagens de galáxias usando a \emph{API}\footnote{API: \emph{Application Programming Interface}; interface de comicação entre sistemas} do SDSS\footnote{Documentação da API: http://skyserver.sdss.org/dr16/en/help/docs/api.aspx}. Para acessar a imagem de uma galáxia, o \emph{endpoint}\footnote{O endpoint é o ponto final de um canal de comunicação, ou seja, é a URL acessada para executar alguma função no servidor} da API do SDSS requere pelo menos dois parâmetros: a ascensão reta\footnote{Distância angular de um ponto específico medido para o leste ao longo do equador celeste} (RA) e a declinação\footnote{Ângulo que localiza um ponto na esfera celeste no sistema de coordenadas equatoriais} (DEC).
+
+O algorítmo baixa todas imagens de galáxias que estão no catálogo do GalaxyZoo usando a API do SDSS. A figura \ref{fig:galaxy_grid} contém uma amostra de 50 imagens de galáxias obtidas pelo algorítmo.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/galaxy_grid.jpg}
+    \caption{Amostra com 50 imagens de galáxias (escala reduzida)}
+    \label{fig:galaxy_grid}
+\end{figure}
+
+Foram baixadas 108.286 imagens no formato JPG e modelo de cores RGB, cada uma com dimensão de 200x200 pixels e escala de 1.35 arsec/pixel do objeto.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% PRÉ-PRECESSAMENTO DOS DADOS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Pré-processamento dos dados}
+
+O pré-processamento é a preparação das imagens para serem usadas pelo modelo durante o treinameto. As imagens são separadas em 5 classes: \texttt{Ei}, \texttt{Er}, \texttt{Ec}, \texttt{Ser}, \texttt{Sc2m} e foram agrupadas em três subconjuntos: treinamento, validação e teste.
+
+\begin{table}[ht]
+    \centering
+    \renewcommand{\arraystretch}{1.6}
+    \begin{tabular}{ccccc}
+        \toprule
+        \thead{Classe} & \thead{Treinamento\\(82,5\%)} & \thead{Validação\\(15\%)} & \thead{Teste\\(2,5\%)} & \thead{Total} \\ 
+        \midrule
+        Ei      & 36.333    & 6.605     & 1.100     & 44.038 \\
+        Er      & 30.331    & 5.514     & 919       & 36.764 \\
+        Ser     & 11.558    & 2.101     & 350       & 14.009 \\
+        Ec      & 8.374     & 1.522     & 253       & 10.149 \\
+        Sc2m    & 2.745     & 498       & 83        & 3.326 \\ 
+        \textbf{Total} & \textbf{89.341} & \textbf{16.240} & \textbf{2.705} & \textbf{108.286} \\
+        \bottomrule
+    \end{tabular}
+    \caption{Quantidade de amostras de imagens de galáxias por classe}
+    \label{tab:img_qtd}
+\end{table}
+
+A tabela \ref{tab:img_qtd} mostra a 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% MODELAGEM DA REDE NEURAL
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Modelagem da Rede Neural}
+
+Foram criados dois modelos: um usando apenas camadas convolucionais e \emph{pooling} ligadas a duas camadas densas (figura \ref{fig:conv_model}) e outro usando uma rede pré-treinada, VGG16, ligada a uma longa camada densa com \emph{dropout} (figura \ref{fig:pretrained_model}).
+
+\begin{figure}
+\centering
+\begin{minipage}[t]{.47\textwidth}
+    \centering
+    \input{figures/conv_model.tex}
+    \captionof{figure}{\textbf{Modelo 1} -- Camadas convolucionais intercaladas com camadas \emph{pooling}.}
+    \label{fig:conv_model}
+\end{minipage}%
+\hfill%
+\begin{minipage}[t]{.47\textwidth}
+    \centering
+    \input{figures/pretrained_model.tex}
+    \captionof{figure}{\textbf{Modelo 2} -- Rede pré-treinada ligada à uma rede densa com \emph{dropout}.}
+    \label{fig:pretrained_model}
+\end{minipage}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% AJUSTE DOS HIPERPARÂMETROS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Ajuste dos Hiperparâmetros}

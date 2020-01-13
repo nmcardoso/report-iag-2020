@@ -1,0 +1,30 @@
+\tikzset{
+>=stealth',
+  punktchain/.style={
+    rectangle, 
+    rounded corners,
+    draw=black, thick,
+    text width=8em, 
+    minimum height=2em, 
+    text centered, 
+    on chain},
+  line/.style={draw, thick, <-},
+  every join/.style={->, thick, shorten >=1pt},
+}
+
+\begin{tikzpicture}
+    [node distance=.5cm,
+    start chain=going below,]
+    \node[punktchain, join] (input) {\small Input};
+    \node[punktchain, join] (vgg16) {\small VGG16};
+    \node[punktchain, join] (flatten) {\small Flatten};
+    \node[punktchain, join] (dense_1) {\small Dense};
+    \node[punktchain, join] (dropout_1) {\small Dropout};
+    \node[punktchain, join] (dense_2) {\small Dense};
+    \node[punktchain, join] (dropout_2) {\small Dropout};
+    \node[punktchain, join] (dense_3) {\small Dense};
+    \node[punktchain, join] (dropout_3) {\small Dropout};
+    \node[punktchain, join] (dense_4) {\small Dense};
+    \node[punktchain, join] (dropout_4) {\small Dropout};
+    \node[punktchain, join] (dense_5) {\small Dense};
+\end{tikzpicture}

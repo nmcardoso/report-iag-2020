@@ -1,0 +1,41 @@
+\tikzset{
+>=stealth',
+  punktchain/.style={
+    rectangle, 
+    rounded corners, 
+    % fill=black!10,
+    draw=black, thick,
+    text width=8em, 
+    minimum height=2em, 
+    text centered, 
+    on chain},
+  line/.style={draw, thick, <-},
+  element/.style={
+    tape,
+    top color=white,
+    bottom color=blue!50!black!60!,
+    minimum width=8em,
+    draw=blue!40!black!90, very thick,
+    text width=8em, 
+    minimum height=2em, 
+    text centered, 
+    on chain},
+  every join/.style={->, thick, shorten >=1pt},
+}
+
+\begin{tikzpicture}
+    [node distance=.5cm,
+    start chain=going below,]
+    \node[punktchain, join] (input) {\small Input};
+    \node[punktchain, join] (conv_1) {\small Conv2D};
+    \node[punktchain, join] (maxpool_1) {\small MaxPooling2D};
+    \node[punktchain, join] (conv_2) {\small Conv2D};
+    \node[punktchain, join] (maxpool_2) {\small MaxPooling2D};
+    \node[punktchain, join] (conv_3) {\small Conv2D};
+    \node[punktchain, join] (maxpool_3) {\small MaxPooling2D};
+    \node[punktchain, join] (conv_4) {\small Conv2D};
+    \node[punktchain, join] (maxpool_4) {\small MaxPooling2D};
+    \node[punktchain, join] (flatten) {\small Flatten};
+    \node[punktchain, join] (dense_1) {\small Dense};
+    \node[punktchain, join] (dense_2) {\small Dense};
+\end{tikzpicture}
