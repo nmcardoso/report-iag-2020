@@ -6,10 +6,10 @@
 \subsection*{Visão Geral}
 
 \begin{figure}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{figures/dl_diagram.pdf}
-    \caption{Fluxograma do desenvolvimento do modelo}
-    \label{fig:fluxogram}
+  \centering
+  \includegraphics[width=\textwidth]{figures/dl_diagram.pdf}
+  \caption{Fluxograma do desenvolvimento do modelo}
+  \label{fig:fluxogram}
 \end{figure}
 
 Pelo fluxograma da figura \ref{fig:fluxogram} vemos que a primeira etapa no desenvolvimento da Rede Neural Convolucional é a aquisição e o pré-processamento dos dados. A criação da estrutura (sequência de camadas da rede neural) e o ajuste dos hiperparâmetros, também chamdo de \emph{fine tunning}, vem em seguida. É o treimento que une a primeira e a segunda etapa, pois é nele que os dados pré-processados são inseridos na estrutura modelada. Logo em seguida é feita uma validação da rede treinada. É o desempenho da modelagem anterior que dá o \emph{feedback} das modificações necessárias para próxima estrutura. O desenvolvimento do modelo termina quando é atingida uma boa acurácia de predição.
@@ -23,16 +23,16 @@ Dados de treinamento são elementos fundamentais para o treinamento supervisiona
 
 A fonte dos dados são GalaxyZoo, que contém as classificações morfológicas, e SDSS, que possui as imagens das galáxias. A associação dos dados entre estas duas fontes são feitas pelas coordenadas do objeto no espaço.
 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/galaxy_grid.jpg}
+  \caption{Amostra com 50 imagens de galáxias (escala reduzida)}
+  \label{fig:galaxy_grid}
+\end{figure}
+
 O catálogo com as classificações estão em um arquivo CSV. Já as imagens foram obtidas baixando cortes de imagens de galáxias usando a \emph{API}\footnote{API: \emph{Application Programming Interface}; interface de comicação entre sistemas} do SDSS\footnote{Documentação da API: http://skyserver.sdss.org/dr16/en/help/docs/api.aspx}. Para acessar a imagem de uma galáxia, o \emph{endpoint}\footnote{O endpoint é o ponto final de um canal de comunicação, ou seja, é a URL acessada para executar alguma função no servidor} da API do SDSS requere pelo menos dois parâmetros: a ascensão reta\footnote{Distância angular de um ponto específico medido para o leste ao longo do equador celeste} (RA) e a declinação\footnote{Ângulo que localiza um ponto na esfera celeste no sistema de coordenadas equatoriais} (DEC).
 
 O algorítmo baixa todas imagens de galáxias que estão no catálogo do GalaxyZoo usando a API do SDSS. A figura \ref{fig:galaxy_grid} contém uma amostra de 50 imagens de galáxias obtidas pelo algorítmo.
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{figures/galaxy_grid.jpg}
-    \caption{Amostra com 50 imagens de galáxias (escala reduzida)}
-    \label{fig:galaxy_grid}
-\end{figure}
 
 Foram baixadas 108.286 imagens no formato JPG e modelo de cores RGB, cada uma com dimensão de 200x200 pixels e escala de 1.35 arsec/pixel do objeto.
 
@@ -43,52 +43,98 @@ Foram baixadas 108.286 imagens no formato JPG e modelo de cores RGB, cada uma co
 
 O pré-processamento é a preparação das imagens para serem usadas pelo modelo durante o treinameto. As imagens são separadas em 5 classes: \texttt{Ei}, \texttt{Er}, \texttt{Ec}, \texttt{Ser}, \texttt{Sc2m} e foram agrupadas em três subconjuntos: treinamento, validação e teste.
 
-\begin{table}[ht]
-    \centering
-    \renewcommand{\arraystretch}{1.6}
-    \begin{tabular}{ccccc}
-        \toprule
-        \thead{Classe} & \thead{Treinamento\\(82,5\%)} & \thead{Validação\\(15\%)} & \thead{Teste\\(2,5\%)} & \thead{Total} \\ 
-        \midrule
-        Ei      & 36.333    & 6.605     & 1.100     & 44.038 \\
-        Er      & 30.331    & 5.514     & 919       & 36.764 \\
-        Ser     & 11.558    & 2.101     & 350       & 14.009 \\
-        Ec      & 8.374     & 1.522     & 253       & 10.149 \\
-        Sc2m    & 2.745     & 498       & 83        & 3.326 \\ 
-        \textbf{Total} & \textbf{89.341} & \textbf{16.240} & \textbf{2.705} & \textbf{108.286} \\
-        \bottomrule
-    \end{tabular}
-    \caption{Quantidade de amostras de imagens de galáxias por classe}
-    \label{tab:img_qtd}
+\begin{table}[h!]
+  \centering
+  \renewcommand{\arraystretch}{1.6}
+  \begin{tabular}{ccccc}
+    \toprule
+    \thead{Classe} & \thead{Treinamento\\(82,5\%)} & \thead{Validação\\(15\%)} & \thead{Teste\\(2,5\%)} & \thead{Total} \\ 
+    \midrule
+    Ei      & 36.333    & 6.605     & 1.100     & 44.038 \\
+    Er      & 30.331    & 5.514     & 919       & 36.764 \\
+    Ser     & 11.558    & 2.101     & 350       & 14.009 \\
+    Ec      & 8.374     & 1.522     & 253       & 10.149 \\
+    Sc2m    & 2.745     & 498       & 83        & 3.326 \\ 
+    \textbf{Total} & \textbf{89.341} & \textbf{16.240} & \textbf{2.705} & \textbf{108.286} \\
+    \bottomrule
+  \end{tabular}
+  \caption{Quantidade de amostras de imagens de galáxias por classe}
+  \label{tab:img_qtd}
 \end{table}
 
-A tabela \ref{tab:img_qtd} mostra a 
+Para cada subconjunto é separada uma quantidade de amostras relativa à quantidade total de cada classe. 82,5\% são para o treino, 15\% são para validação e 2,5\% são para os testes. A tabela \ref{tab:img_qtd} mostra a quantidade de imagens para cada um dos subconjuntos conforme a classe.
+
+Depois de separadas, as imagens precisam ser transformadas em tensores. No sistema RGB, cada cor é representada por três números inteiros no intervalo de 0 a 255. Cada imagem, então, é representada por um tensor de dimensão (200, 200, 3). As primeiras duas dimensões são referentes ao cumprimento e largura da imagem e a terceira aos 3 canais de cores RGB.
+
+Representar uma cor por um trio faz sentido quando se conhece a especificação do sistema de cores RGB, mas isso não é intuituvo para um modelo de rede neural artificial. Por isso, cada número do tensor é reescalado para um número real no intervalo entre 0 e 1 dividindo cada número por 255.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% MODELAGEM DA REDE NEURAL
+%% MODELAGEM DA REDE NEURAL ARTIFICIAL
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection*{Modelagem da Rede Neural}
+\subsection*{Modelagem e Ajuste dos Hiperparâmetros}
 
-Foram criados dois modelos: um usando apenas camadas convolucionais e \emph{pooling} ligadas a duas camadas densas (figura \ref{fig:conv_model}) e outro usando uma rede pré-treinada, VGG16, ligada a uma longa camada densa com \emph{dropout} (figura \ref{fig:pretrained_model}).
+A rede neural artificial foi programada em Python e a biblioteca Keras\footnote{Keras é uma API de alto nível criada para modelagem e treinamento de redes neurais que, neste projeto, roda sobre o TensorFlow. Tem foco em permitir experimentação rápida.} foi usada para criar e treinar o modelo.
 
-\begin{figure}
-\centering
-\begin{minipage}[t]{.47\textwidth}
+A modelagem é a criação de uma estrutura, isto inclui: a escolha da quantidade de camadas, a definição do tipo de cada camada e a especificação da sequência em que as camadas aparecerão. Já os hiperparâmetros são os atributos de cada camada ou do modelo em geral. Alguns exemplos de hiperparâmetros são: a curva de aprendizagem\footnote{A velocidade com que a rede neural aprende os padrões} (\emph{learning rate}), a quantidade de unidades\footnote{A quantidade de neurônios artificais} de cada camada e a taxa (\emph{rate}) das camadas \emph{dropout}. Estes ajustes são feitos empiricamente e reajustados de acordo com resultado obtido após o treinamento, como visto na figura \ref{fig:fluxogram}.
+
+\pagebreak
+
+\begin{figure}[h!]
+  \centering
+  \begin{minipage}[t]{.47\textwidth}
     \centering
     \input{figures/conv_model.tex}
     \captionof{figure}{\textbf{Modelo 1} -- Camadas convolucionais intercaladas com camadas \emph{pooling}.}
     \label{fig:conv_model}
-\end{minipage}%
-\hfill%
-\begin{minipage}[t]{.47\textwidth}
+  \end{minipage}%
+  \hfill%
+  \begin{minipage}[t]{.47\textwidth}
     \centering
     \input{figures/pretrained_model.tex}
     \captionof{figure}{\textbf{Modelo 2} -- Rede pré-treinada ligada à uma rede densa com \emph{dropout}.}
     \label{fig:pretrained_model}
-\end{minipage}
-\end{figure}
+  \end{minipage}
+  \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% AJUSTE DOS HIPERPARÂMETROS
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection*{Ajuste dos Hiperparâmetros}
+\pagebreak
+
+Foram criados dois modelos: um usando apenas camadas convolucionais e \emph{pooling} ligadas a uma pequena rede densa (figura \ref{fig:conv_model}) e outro usando uma rede pré-treinada, VGG16, ligada a uma longa rede densa com \emph{dropout} de acordo com o diagrama da figura \ref{fig:pretrained_model}.
+
+Para ambos modelos, a dimensão do tensor da entrada é (200, 200, 3). Cinco unidades na camada de saída com ativador \texttt{Softmax}. A  função de perda utilizada foi a \texttt{Categorical Crossentropy} e o otimizador foi o \texttt{RMSprop}.
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{cc}
+    \toprule
+    \thead{Hiperparâmetro} & \thead{Valor} \\
+    \midrule
+    Ativador (Conv2D) & ReLu \\
+    Ativador (Dense, 1) & ReLu \\
+    Unidades (Conv2D) & 32, 64, 128 e 128 \\
+    Unidades (Dense, 1) & 512 \\
+    Dimensão do Kernel (Conv2D) & (3, 3) \\
+    \emph{Pool Size} (MaxPooling2D) & (2, 2) \\
+    Taxa de aprendizagem & $10^{-4}$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{Descrição dos hiperparâmetros do Modelo 1.}
+  \label{tab:hip_model1}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{cc}
+    \toprule
+    \thead{Hiperparâmetro} & \thead{Valor} \\
+    \midrule
+    Ativador (Dense, 1-4) & ReLu \\
+    Unidades (Dense, 1-4) & 2048, 1024, 512, 256 \\
+    Taxa de \emph{dropout} & 0,5 \\
+    Taxa de aprendizagem & $10^{-5}$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{Descrição dos hiperparâmetros do Modelo 2.}
+  \label{tab:hip_model2}
+\end{table}
+
+Como mostrado na figura \ref{fig:fluxogram}, diversos valores de hiperparâmetros foram ajustados empiricamente. As tabelas \ref{tab:hip_model1} e \ref{tab:hip_model2} mostram os valores dos hiperparâmetros com melhor desempenho e que serão discutidos aqui.
