@@ -32,7 +32,7 @@ A fonte dos dados são GalaxyZoo, que contém as classificações morfológicas,
 
 O catálogo com as classificações estão em um arquivo CSV. Já as imagens foram obtidas usando a \emph{API}\footnote{API: \emph{Application Programming Interface}; interface de comicação entre sistemas.} do SDSS\footnote{Documentação da API: http://skyserver.sdss.org/dr16/en/help/docs/api.aspx.}. Para acessar a imagem de uma galáxia, o \emph{endpoint}\footnote{O endpoint é o ponto final de um canal de comunicação, ou seja, é a URL acessada para executar alguma função no servidor.} da API do SDSS requere pelo menos dois parâmetros: a ascensão reta\footnote{Distância angular de um ponto específico medido para o leste ao longo do equador celeste.} (RA) e a declinação\footnote{Ângulo que localiza um ponto na esfera celeste no sistema de coordenadas equatoriais.} (DEC).
 
-O algorítmo baixa todas as imagens de galáxias que estão no catálogo do GalaxyZoo usando a API do SDSS. A figura \ref{fig:galaxy_grid} contém uma amostra de cinquenta imagens de galáxias obtidas pelo algorítmo.
+O algorítmo\cite{cardoso2020} baixa todas as imagens de galáxias que estão no catálogo do GalaxyZoo usando a API do SDSS. A figura \ref{fig:galaxy_grid} contém uma amostra de cinquenta imagens de galáxias obtidas pelo algorítmo.
 
 Foram baixadas 108.286 imagens no formato JPG e modelo de cores RGB, cada uma com dimensão de 200x200 pixels e escala de 1,35 arsec/pixel do objeto.
 
