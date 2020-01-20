@@ -30,7 +30,7 @@ A fonte dos dados são GalaxyZoo, que contém as classificações morfológicas,
   \label{fig:galaxy_grid}
 \end{figure}
 
-O catálogo com as classificações estão em um arquivo CSV. Já as imagens foram obtidas usando a \emph{API}\footnote{API: \emph{Application Programming Interface}; interface de comicação entre sistemas.} do SDSS\footnote{Documentação da API: http://skyserver.sdss.org/dr16/en/help/docs/api.aspx.}. Para acessar a imagem de uma galáxia, o \emph{endpoint}\footnote{O endpoint é o ponto final de um canal de comunicação, ou seja, é a URL acessada para executar alguma função no servidor.} da API do SDSS requere pelo menos dois parâmetros: a ascensão reta\footnote{Distância angular de um ponto específico medido para o leste ao longo do equador celeste.} (RA) e a declinação\footnote{Ângulo que localiza um ponto na esfera celeste no sistema de coordenadas equatoriais.} (DEC).
+O catálogo com as classificações estão em um arquivo CSV. Já as imagens foram obtidas usando a \emph{API}\footnote{API: \emph{Application Programming Interface}. É uma interface de comicação entre sistemas.} do SDSS\footnote{Documentação da API: http://skyserver.sdss.org/dr16/en/help/docs/api.aspx.}. Para acessar a imagem de uma galáxia, o \emph{endpoint}\footnote{O endpoint é o ponto final de um canal de comunicação, ou seja, é a URL acessada para executar alguma função no servidor.} da API do SDSS requere pelo menos dois parâmetros: a ascensão reta\footnote{Distância angular de um ponto específico medido para o leste ao longo do equador celeste.} (RA) e a declinação\footnote{Ângulo que localiza um ponto na esfera celeste no sistema de coordenadas equatoriais.} (DEC).
 
 O algorítmo\cite{cardoso2020} baixa todas as imagens de galáxias que estão no catálogo do GalaxyZoo usando a API do SDSS. A figura \ref{fig:galaxy_grid} contém uma amostra de cinquenta imagens de galáxias obtidas pelo algorítmo.
 
@@ -55,7 +55,7 @@ O pré-processamento é a preparação das imagens para serem usadas pelo modelo
     Ser     & 11.558    & 2.101     & 350       & 14.009 \\
     Ec      & 8.374     & 1.522     & 253       & 10.149 \\
     Sc2m    & 2.745     & 498       & 83        & 3.326 \\ 
-    \textbf{Total} & \textbf{89.341} & \textbf{16.240} & \textbf{2.705} & \textbf{108.286} \\
+    Total   & 89.341    & 16.240    & 2.705     & 108.286 \\
     \bottomrule
   \end{tabular}
   \caption{Quantidade de amostras de imagens de galáxias por classe.}
@@ -73,9 +73,9 @@ Representar uma cor por um terno faz sentido quando se conhece a especificação
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Modelagem e Ajuste dos Hiperparâmetros}
 
-A rede neural artificial foi programada em Python e a biblioteca Keras\footnote{Keras é uma API de alto nível criada para modelagem e treinamento de redes neurais que, neste projeto, roda sobre o TensorFlow. Tem foco em permitir experimentação rápida.} foi usada para criar e treinar o modelo.
+A rede neural artificial foi programada em Python e a biblioteca Keras\footnote{Uma API de alto nível criada para modelagem e treinamento de redes neurais que, neste projeto, roda sobre o TensorFlow. Tem foco em permitir experimentação rápida.} foi usada para criar e treinar o modelo.
 
-A modelagem é a criação de uma estrutura. Isto inclui: a escolha da quantidade de camadas, a definição do tipo de cada camada e a especificação da sequência em que as camadas aparecerão. Já os hiperparâmetros são os atributos de cada camada ou do modelo em geral. Alguns exemplos de hiperparâmetros são: a curva de aprendizagem\footnote{A velocidade com que a rede neural aprende os padrões.} (\emph{learning rate}), a quantidade de unidades\footnote{A quantidade de neurônios artificais.} de cada camada e a taxa (\emph{rate}) das camadas \emph{dropout}. Estes ajustes são feitos empiricamente e reajustados de acordo com o resultado obtido após o treinamento, como visto na figura \ref{fig:fluxogram}.
+A modelagem é a criação de uma estrutura. Isto inclui: a escolha da quantidade de camadas, a definição do tipo de cada camada e a especificação da sequência em que as camadas aparecerão. Já os hiperparâmetros são os atributos de cada camada ou do modelo em geral. Alguns exemplos de hiperparâmetros são: a taxa de aprendizagem\footnote{A velocidade com que a rede neural aprende os padrões.} (\emph{learning rate}), a quantidade de unidades\footnote{A quantidade de neurônios artificais.} de cada camada e a taxa (\emph{rate}) das camadas \emph{dropout}. Estes ajustes são feitos empiricamente e reajustados de acordo com o resultado obtido após o treinamento, como visto na figura \ref{fig:fluxogram}.
 
 \pagebreak
 
@@ -102,9 +102,9 @@ Foram criados dois modelos: um, usando apenas camadas convolucionais e \emph{poo
 
 Cada modelo representa uma técnica diferente para treinamento de redes neurais. A primeira, que é a mais \emph{canônica}, usa apenas informações do conjunto de treinamento, já a segunda usa pesos definidos de uma rede neural pré-treinada, VGG16. 
 
-Esta rede VGG16 é treinada usando a base de dados \emph{ImageNet}\footnote{http://www.image-net.org/.}, que possui milhões de imagens de objetos do cotidaino, mas não possui objetos do espaço. A idéia é descobrir se usar uma rede pré-treinada com milhões de imagens, mas nenhuma de galáxias, é tão relevante quanto usar uma rede treinada com apenas alguns milhares de amostras, mas todas de galáxias. Já que as redes neurais convolucionais são usadas como camada de abstração do mundo visual, ou seja, elas detectam padrões como geometrias, texturas e cores.
+Esta rede VGG16 é treinada usando a base de dados \emph{ImageNet}\footnote{http://www.image-net.org/.}, que possui milhões de imagens de objetos do cotidaino, mas não possui objetos do espaço. A idéia é descobrir que se usar uma rede pré-treinada com milhões de imagens, mas nenhuma de galáxias, é tão relevante quanto usar uma rede treinada com apenas alguns milhares de amostras, mas todas de galáxias. Pois as redes neurais convolucionais são usadas como camada de abstração do mundo visual, ou seja, elas detectam padrões como geometrias, texturas e cores.
 
-Para ambos modelos, a dimensão do tensor da entrada é (200, 200, 3). Cinco unidades na camada de saída com ativador \texttt{Softmax}. A  função de perda utilizada foi a \texttt{Categorical Crossentropy} e o otimizador foi o \texttt{RMSprop}.
+Para ambos os modelos, a dimensão do tensor da entrada é (200, 200, 3). Cinco unidades na camada de saída com ativador \texttt{Softmax}. A  função de perda utilizada foi a \texttt{Categorical Crossentropy} e o otimizador foi o \texttt{RMSprop}.
 
 \begin{table}[h!]
   \centering
