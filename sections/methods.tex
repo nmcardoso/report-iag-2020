@@ -77,8 +77,15 @@ A rede neural artificial foi programada em Python e a biblioteca Keras\footnote{
 
 A modelagem é a criação de uma estrutura. Isto inclui: a escolha da quantidade de camadas, a definição do tipo de cada camada e a especificação da sequência em que as camadas aparecerão. Já os hiperparâmetros são os atributos de cada camada ou do modelo em geral. Alguns exemplos de hiperparâmetros são: a taxa de aprendizagem\footnote{A velocidade com que a rede neural aprende os padrões.} (\emph{learning rate}), a quantidade de unidades\footnote{A quantidade de neurônios artificais.} de cada camada e a taxa (\emph{rate}) das camadas \emph{dropout}. Estes ajustes são feitos empiricamente e reajustados de acordo com o resultado obtido após o treinamento, como visto na figura \ref{fig:fluxogram}.
 
-\pagebreak
+Foram criados dois modelos: um, usando apenas camadas convolucionais e \emph{pooling} ligadas a uma pequena rede densa (figura \ref{fig:conv_model}) e outro, usando uma rede pré-treinada, VGG16, ligada a uma longa rede densa com \emph{dropout} de acordo com o diagrama da figura \ref{fig:pretrained_model}.
 
+Cada modelo representa uma técnica diferente para treinamento de redes neurais. A primeira, que é a mais \emph{canônica}, usa apenas informações do conjunto de treinamento, já a segunda usa pesos definidos de uma rede neural pré-treinada, VGG16. 
+
+Esta rede VGG16 é treinada usando a base de dados \emph{ImageNet}\footnote{http://www.image-net.org/.}, que possui milhões de imagens de objetos do cotidaino, mas não possui objetos do espaço. A idéia é descobrir que se usar uma rede pré-treinada com milhões de imagens, mas nenhuma de galáxias, é tão relevante quanto usar uma rede treinada com apenas alguns milhares de amostras, mas todas de galáxias. Pois as redes neurais convolucionais são usadas como camada de abstração do mundo visual, ou seja, elas detectam padrões como geometrias, texturas e cores.
+
+Para ambos os modelos, a dimensão do tensor da entrada é (200, 200, 3). Cinco unidades na camada de saída com ativador \texttt{Softmax}. A  função de perda utilizada foi a \texttt{Categorical Crossentropy} e o otimizador foi o \texttt{RMSprop}.
+
+\pagebreak
 \begin{figure}[h!]
   \centering
   \begin{minipage}[t]{.47\textwidth}
@@ -94,17 +101,8 @@ A modelagem é a criação de uma estrutura. Isto inclui: a escolha da quantidad
     \captionof{figure}{\textbf{Modelo 2} -- Rede pré-treinada ligada à uma rede densa com \emph{dropout}.}
     \label{fig:pretrained_model}
   \end{minipage}
-  \end{figure}
-
+\end{figure}
 \pagebreak
-
-Foram criados dois modelos: um, usando apenas camadas convolucionais e \emph{pooling} ligadas a uma pequena rede densa (figura \ref{fig:conv_model}) e outro, usando uma rede pré-treinada, VGG16, ligada a uma longa rede densa com \emph{dropout} de acordo com o diagrama da figura \ref{fig:pretrained_model}.
-
-Cada modelo representa uma técnica diferente para treinamento de redes neurais. A primeira, que é a mais \emph{canônica}, usa apenas informações do conjunto de treinamento, já a segunda usa pesos definidos de uma rede neural pré-treinada, VGG16. 
-
-Esta rede VGG16 é treinada usando a base de dados \emph{ImageNet}\footnote{http://www.image-net.org/.}, que possui milhões de imagens de objetos do cotidaino, mas não possui objetos do espaço. A idéia é descobrir que se usar uma rede pré-treinada com milhões de imagens, mas nenhuma de galáxias, é tão relevante quanto usar uma rede treinada com apenas alguns milhares de amostras, mas todas de galáxias. Pois as redes neurais convolucionais são usadas como camada de abstração do mundo visual, ou seja, elas detectam padrões como geometrias, texturas e cores.
-
-Para ambos os modelos, a dimensão do tensor da entrada é (200, 200, 3). Cinco unidades na camada de saída com ativador \texttt{Softmax}. A  função de perda utilizada foi a \texttt{Categorical Crossentropy} e o otimizador foi o \texttt{RMSprop}.
 
 \begin{table}[h!]
   \centering
