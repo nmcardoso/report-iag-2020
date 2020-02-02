@@ -5,14 +5,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Visão Geral}
 
+Pelo fluxograma da figura \ref{fig:fluxogram}, vemos que a primeira etapa no desenvolvimento da Rede Neural Convolucional é a aquisição e o pré-processamento dos dados. A criação da estrutura (sequência de camadas da rede neural) e o ajuste dos hiperparâmetros, também chamdo de \emph{fine tunning}, vem em seguida. É o treimento que une a primeira e a segunda etapa, pois é nele que os dados pré-processados são inseridos na estrutura modelada. Logo em seguida, é feita uma validação da rede treinada. É o desempenho da modelagem anterior que dá o \emph{feedback} das modificações necessárias para a próxima versão da estrutura. O desenvolvimento do modelo termina quando é atingida uma boa acurácia de predição.
+
 \begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{figures/dl_diagram.pdf}
   \caption{Fluxograma do desenvolvimento do modelo.}
   \label{fig:fluxogram}
 \end{figure}
-
-Pelo fluxograma da figura \ref{fig:fluxogram}, vemos que a primeira etapa no desenvolvimento da Rede Neural Convolucional é a aquisição e o pré-processamento dos dados. A criação da estrutura (sequência de camadas da rede neural) e o ajuste dos hiperparâmetros, também chamdo de \emph{fine tunning}, vem em seguida. É o treimento que une a primeira e a segunda etapa, pois é nele que os dados pré-processados são inseridos na estrutura modelada. Logo em seguida, é feita uma validação da rede treinada. É o desempenho da modelagem anterior que dá o \emph{feedback} das modificações necessárias para a próxima versão da estrutura. O desenvolvimento do modelo termina quando é atingida uma boa acurácia de predição.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% AQUISIÇÃO DOS DADOS
@@ -23,14 +23,14 @@ Dados de treinamento são elementos fundamentais para o treinamento supervisiona
 
 A fonte dos dados são GalaxyZoo, que contém as classificações morfológicas, e SDSS, que possui as imagens das galáxias. A associação dos dados entre estas duas fontes são feitas pelas coordenadas do objeto no espaço.
 
+O catálogo com as classificações estão em um arquivo CSV. Já as imagens foram obtidas usando a \emph{API}\footnote{API: \emph{Application Programming Interface}. É uma interface de comicação entre sistemas.} do SDSS\footnote{Documentação da API: http://skyserver.sdss.org/dr16/en/help/docs/api.aspx.}. Para acessar a imagem de uma galáxia, o \emph{endpoint}\footnote{O endpoint é o ponto final de um canal de comunicação, ou seja, é a URL acessada para executar alguma função no servidor.} da API do SDSS requer pelo menos dois parâmetros: a ascensão reta\footnote{Distância angular de um ponto específico medido para o leste ao longo do equador celeste.} (RA) e a declinação\footnote{Ângulo que localiza um ponto na esfera celeste no sistema de coordenadas equatoriais.} (DEC).
+
 \begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{figures/galaxy_grid.jpg}
   \caption{Amostra com cinquenta imagens de galáxias (escala reduzida).}
   \label{fig:galaxy_grid}
 \end{figure}
-
-O catálogo com as classificações estão em um arquivo CSV. Já as imagens foram obtidas usando a \emph{API}\footnote{API: \emph{Application Programming Interface}. É uma interface de comicação entre sistemas.} do SDSS\footnote{Documentação da API: http://skyserver.sdss.org/dr16/en/help/docs/api.aspx.}. Para acessar a imagem de uma galáxia, o \emph{endpoint}\footnote{O endpoint é o ponto final de um canal de comunicação, ou seja, é a URL acessada para executar alguma função no servidor.} da API do SDSS requer pelo menos dois parâmetros: a ascensão reta\footnote{Distância angular de um ponto específico medido para o leste ao longo do equador celeste.} (RA) e a declinação\footnote{Ângulo que localiza um ponto na esfera celeste no sistema de coordenadas equatoriais.} (DEC).
 
 O algorítmo\cite{cardoso2020} baixa todas as imagens de galáxias que estão no catálogo do GalaxyZoo usando a API do SDSS. A figura \ref{fig:galaxy_grid} contém uma amostra de cinquenta imagens de galáxias obtidas pelo algorítmo.
 
@@ -81,10 +81,6 @@ Foram criados dois modelos: um, usando apenas camadas convolucionais e \emph{poo
 
 Cada modelo representa uma técnica diferente para treinamento de redes neurais. A primeira, que é a mais \emph{canônica}, usa apenas informações do conjunto de treinamento, já a segunda usa pesos definidos de uma rede neural pré-treinada, VGG16. 
 
-Esta rede VGG16 é treinada usando a base de dados \emph{ImageNet}\footnote{http://www.image-net.org/.}, que possui milhões de imagens de objetos do cotidaino, mas não possui objetos do espaço. A idéia é descobrir que se usar uma rede pré-treinada com milhões de imagens, mas nenhuma de galáxias, é tão relevante quanto usar uma rede treinada com apenas alguns milhares de amostras, mas todas de galáxias. Pois as redes neurais convolucionais são usadas como camada de abstração do mundo visual, ou seja, elas detectam padrões como geometrias, texturas e cores.
-
-Para ambos os modelos, a dimensão do tensor da entrada é (200, 200, 3). Cinco unidades na camada de saída com ativador \texttt{Softmax}. A  função de perda utilizada foi a \texttt{Categorical Crossentropy} e o otimizador foi o \texttt{RMSprop}.
-
 \pagebreak
 \begin{figure}[h!]
   \centering
@@ -103,6 +99,11 @@ Para ambos os modelos, a dimensão do tensor da entrada é (200, 200, 3). Cinco 
   \end{minipage}
 \end{figure}
 \pagebreak
+
+Esta rede VGG16 é treinada usando a base de dados \emph{ImageNet}\footnote{http://www.image-net.org/.}, que possui milhões de imagens de objetos do cotidaino, mas não possui objetos do espaço. A idéia é descobrir que se usar uma rede pré-treinada com milhões de imagens, mas nenhuma de galáxias, é tão relevante quanto usar uma rede treinada com apenas alguns milhares de amostras, mas todas de galáxias. Pois as redes neurais convolucionais são usadas como camada de abstração do mundo visual, ou seja, elas detectam padrões como geometrias, texturas e cores.
+
+Para ambos os modelos, a dimensão do tensor da entrada é (200, 200, 3). Cinco unidades na camada de saída com ativador \texttt{Softmax}. A  função de perda utilizada foi a \texttt{Categorical Crossentropy} e o otimizador foi o \texttt{RMSprop}.
+
 
 \begin{table}[h!]
   \centering
