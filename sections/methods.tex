@@ -1,9 +1,9 @@
-\section*{Materiais e Métodos}
+\section{Materiais e Métodos}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% VISÃO GERAL
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection*{Visão Geral}
+\subsection{Visão Geral}
 
 Pelo fluxograma da figura \ref{fig:fluxogram}, vemos que a primeira etapa no desenvolvimento da Rede Neural Convolucional é a aquisição e o pré-processamento dos dados. A criação da estrutura (sequência de camadas da rede neural) e o ajuste dos hiperparâmetros, também chamdo de \emph{fine tunning}, vem em seguida. É o treimento que une a primeira e a segunda etapa, pois é nele que os dados pré-processados são inseridos na estrutura modelada. Logo em seguida, é feita uma validação da rede treinada. É o desempenho da modelagem anterior que dá o \emph{feedback} das modificações necessárias para a próxima versão da estrutura. O desenvolvimento do modelo termina quando é atingida uma boa acurácia de predição.
 
@@ -17,7 +17,7 @@ Pelo fluxograma da figura \ref{fig:fluxogram}, vemos que a primeira etapa no des
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% AQUISIÇÃO DOS DADOS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection*{Aquisição dos dados}
+\subsection{Aquisição dos dados}
 
 Dados de treinamento são elementos fundamentais para o treinamento supervisionado de uma Rede Neural Artificial. Para treinar uma rede que aprenda a classificar galáxias de acordo com suas imagens é necessário fazê-la aprender formas e padrões das galáxias. Para isso, é necessário separar uma grande amostra de imagens de galáxias já classificadas por humanos.
 
@@ -39,7 +39,7 @@ Foram baixadas 108.286 imagens no formato JPG e modelo de cores RGB, cada uma co
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PRÉ-PRECESSAMENTO DOS DADOS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection*{Pré-processamento dos dados}
+\subsection{Pré-processamento dos dados}
 
 O pré-processamento é a preparação das imagens para serem usadas pelo modelo durante o treinameto. As imagens são separadas em cinco classes: \texttt{Ei}, \texttt{Er}, \texttt{Ec}, \texttt{Ser}, \texttt{Sc2m} e foram agrupadas em três subconjuntos: treinamento, validação e teste.
 
@@ -48,14 +48,14 @@ O pré-processamento é a preparação das imagens para serem usadas pelo modelo
   \renewcommand{\arraystretch}{1.6}
   \begin{tabular}{ccccc}
     \toprule
-    \thead{Classe} & \thead{Treinamento\\(82,5\%)} & \thead{Validação\\(15\%)} & \thead{Teste\\(2,5\%)} & \thead{Total} \\ 
+    \thead{Classe} & \thead{Treinamento                            \\(82,5\%)} & \thead{Validação\\(15\%)} & \thead{Teste\\(2,5\%)} & \thead{Total} \\
     \midrule
-    Ei      & 36.333    & 6.605     & 1.100     & 44.038 \\
-    Er      & 30.331    & 5.514     & 919       & 36.764 \\
-    Ser     & 11.558    & 2.101     & 350       & 14.009 \\
-    Ec      & 8.374     & 1.522     & 253       & 10.149 \\
-    Sc2m    & 2.745     & 498       & 83        & 3.326 \\ 
-    Total   & 89.341    & 16.240    & 2.705     & 108.286 \\
+    Ei             & 36.333             & 6.605  & 1.100 & 44.038  \\
+    Er             & 30.331             & 5.514  & 919   & 36.764  \\
+    Ser            & 11.558             & 2.101  & 350   & 14.009  \\
+    Ec             & 8.374              & 1.522  & 253   & 10.149  \\
+    Sc2m           & 2.745              & 498    & 83    & 3.326   \\
+    Total          & 89.341             & 16.240 & 2.705 & 108.286 \\
     \bottomrule
   \end{tabular}
   \caption{Quantidade de amostras de imagens de galáxias por classe.}
@@ -71,7 +71,7 @@ Representar uma cor por um terno faz sentido quando se conhece a especificação
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MODELAGEM DA REDE NEURAL ARTIFICIAL
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection*{Modelagem e Ajuste dos Hiperparâmetros}
+\subsection{Modelagem e Ajuste dos Hiperparâmetros}
 
 A rede neural artificial foi programada em Python e a biblioteca Keras\footnote{Uma API de alto nível criada para modelagem e treinamento de redes neurais que, neste projeto, roda sobre o TensorFlow. Tem foco em permitir experimentação rápida.} foi usada para criar e treinar o modelo.
 
@@ -79,7 +79,7 @@ A modelagem é a criação de uma estrutura. Isto inclui: a escolha da quantidad
 
 Foram criados dois modelos: um, usando apenas camadas convolucionais e \emph{pooling} ligadas a uma pequena rede densa (figura \ref{fig:conv_model}) e outro, usando uma rede pré-treinada, VGG16, ligada a uma longa rede densa com \emph{dropout} de acordo com o diagrama da figura \ref{fig:pretrained_model}.
 
-Cada modelo representa uma técnica diferente para treinamento de redes neurais. A primeira, que é a mais \emph{canônica}, usa apenas informações do conjunto de treinamento, já a segunda usa pesos definidos de uma rede neural pré-treinada, VGG16. 
+Cada modelo representa uma técnica diferente para treinamento de redes neurais. A primeira, que é a mais \emph{canônica}, usa apenas informações do conjunto de treinamento, já a segunda usa pesos definidos de uma rede neural pré-treinada, VGG16.
 
 \pagebreak
 \begin{figure}[h!]
@@ -104,20 +104,19 @@ Esta rede VGG16 é treinada usando a base de dados \emph{ImageNet}\footnote{http
 
 Para ambos os modelos, a dimensão do tensor da entrada é (200, 200, 3). Cinco unidades na camada de saída com ativador \texttt{Softmax}. A  função de perda utilizada foi a \texttt{Categorical Crossentropy} e o otimizador foi o \texttt{RMSprop}.
 
-
 \begin{table}[h!]
   \centering
   \begin{tabular}{cc}
     \toprule
-    \thead{Hiperparâmetro} & \thead{Valor} \\
+    \thead{Hiperparâmetro}          & \thead{Valor}     \\
     \midrule
-    Ativador (Conv2D) & ReLu \\
-    Ativador (Dense, 1) & ReLu \\
-    Unidades (Conv2D) & 32, 64, 128 e 128 \\
-    Unidades (Dense, 1) & 512 \\
-    Dimensão do Kernel (Conv2D) & (3, 3) \\
-    \emph{Pool Size} (MaxPooling2D) & (2, 2) \\
-    Taxa de aprendizagem & $10^{-4}$ \\
+    Ativador (Conv2D)               & ReLu              \\
+    Ativador (Dense, 1)             & ReLu              \\
+    Unidades (Conv2D)               & 32, 64, 128 e 128 \\
+    Unidades (Dense, 1)             & 512               \\
+    Dimensão do Kernel (Conv2D)     & (3, 3)            \\
+    \emph{Pool Size} (MaxPooling2D) & (2, 2)            \\
+    Taxa de aprendizagem            & $10^{-4}$         \\
     \bottomrule
   \end{tabular}
   \caption{Descrição dos hiperparâmetros do Modelo 1.}
@@ -128,12 +127,12 @@ Para ambos os modelos, a dimensão do tensor da entrada é (200, 200, 3). Cinco 
   \centering
   \begin{tabular}{cc}
     \toprule
-    \thead{Hiperparâmetro} & \thead{Valor} \\
+    \thead{Hiperparâmetro} & \thead{Valor}        \\
     \midrule
-    Ativador (Dense, 1-4) & ReLu \\
-    Unidades (Dense, 1-4) & 2048, 1024, 512, 256 \\
-    Taxa de \emph{dropout} & 0,5 \\
-    Taxa de aprendizagem & $10^{-5}$ \\
+    Ativador (Dense, 1-4)  & ReLu                 \\
+    Unidades (Dense, 1-4)  & 2048, 1024, 512, 256 \\
+    Taxa de \emph{dropout} & 0,5                  \\
+    Taxa de aprendizagem   & $10^{-5}$            \\
     \bottomrule
   \end{tabular}
   \caption{Descrição dos hiperparâmetros do Modelo 2.}

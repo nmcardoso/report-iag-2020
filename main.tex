@@ -1,5 +1,6 @@
 \documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage[brazilian]{babel}
 \usepackage[style=numeric,sorting=none,backend=biber]{biblatex}
 \usepackage{indentfirst}
@@ -13,6 +14,9 @@
 \usetikzlibrary{calc,trees,positioning,arrows,chains,shapes.geometric,
   decorations.pathreplacing,decorations.pathmorphing,shapes,
   matrix,shapes.symbols}
+
+\usepackage{titlesec}
+\titlelabel{\thetitle.\quad}
 
 \addbibresource{bibliography.bib}
 
