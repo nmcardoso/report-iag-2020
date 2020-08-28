@@ -5,6 +5,7 @@ on:
       - master
 jobs:
   main:
+    if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     runs-on: ubuntu-latest
     steps:
       - name: Setup git repo
