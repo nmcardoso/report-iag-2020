@@ -26,10 +26,6 @@ Outra forma é pela curva ROC (\emph{Receiver Operating Characteristic}), como n
 
 Pela análise dos gráficos da figura \ref{fig:graficos}, vemos que os modelos 1 e 2, que são treinados com menos informação -- apenas 3 bandas, tem uma maior separabilidade, ou seja, consegue distinguir melhor entre as classes em relação ao modelo 3, que foi treinado com 12 bandas fotométricas.
 
-% Pela figura \ref{fig:conv_train}, é visto que o \emph{overfiting} começa na oitava época de treinamento. A partir daí, a curva de perda do conjunto de validação começa a divergir da curva de perda do conjunto de treinamento.
-
-% Já na figura \ref{fig:pretrained_train}, é visto que o \emph{overfiting} começa na décima segunda época de treinamento. No entanto, a acurácia final desta rede é menor que da primeira, mesmo com mais épocas de treinamento.
-
 % \pagebreak
 \afterpage{\clearpage}
 
@@ -69,24 +65,3 @@ Pela análise dos gráficos da figura \ref{fig:graficos}, vemos que os modelos 1
   \caption{Gráficos do treinamento e respectiva curva ROC para cada modelo.}
   \label{fig:graficos}
 \end{figure}
-
-% \begin{figure}[h!]
-%   \centering
-%   \includegraphics[width=.79\textwidth]{figures/conv_train2.pdf}
-%   \caption{Gráfico da acurácia e perda dos subconjuntos de treino e validação em cada época de treinamento do Modelo 1.}
-%   \label{fig:conv_train}
-% \end{figure}
-
-% \begin{figure}[h!]
-%   \centering
-%   \includegraphics[width=.79\textwidth]{figures/pretrained_train2.pdf}
-%   \caption{Gráfico da acurácia e perda dos subconjuntos de treino e validação em cada época de treinamento do Modelo 2.}
-%   \label{fig:pretrained_train}
-% \end{figure}
-
-% \begin{figure}[h!]
-%   \centering
-%   \includegraphics[width=.79\textwidth]{figures/splus_train.pdf}
-%   \caption{Gráfico da acurácia e perda dos subconjuntos de treino e validação em cada época de treinamento do Modelo 3.}
-%   \label{fig:splus_train}
-% \end{figure}
