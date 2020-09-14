@@ -21,9 +21,9 @@ Pelo fluxograma da figura \ref{fig:fluxogram}, vemos que a primeira etapa no des
 
 Dados de treinamento são elementos fundamentais para o treinamento supervisionado de uma Rede Neural Artificial. Para treinar uma rede que aprenda a classificar galáxias de acordo com suas imagens é necessário fazê-la aprender formas e padrões das galáxias. Para isso, é necessário separar uma grande amostra de imagens de galáxias já classificadas por humanos.
 
-A fonte dos dados são GalaxyZoo, que contém as classificações morfológicas, e SDSS, que possui as imagens das galáxias. A associação dos dados entre estas duas fontes são feitas pelas coordenadas do objeto no espaço.
+A fonte dos dados são GalaxyZoo, que contém as classificações morfológicas, e os levantamentos SDSS e S-PLUS, que possuem as imagens das galáxias. A associação dos dados entre estas duas fontes são feitas pelas coordenadas do objeto no espaço.
 
-O catálogo com as classificações estão em um arquivo CSV. Já as imagens foram obtidas usando a \emph{API}\footnote{API: \emph{Application Programming Interface}. É uma interface de comicação entre sistemas.} do SDSS\footnote{Documentação da API: http://skyserver.sdss.org/dr16/en/help/docs/api.aspx.}. Para acessar a imagem de uma galáxia, o \emph{endpoint}\footnote{O endpoint é o ponto final de um canal de comunicação, ou seja, é a URL acessada para executar alguma função no servidor.} da API do SDSS requer pelo menos dois parâmetros: a ascensão reta\footnote{Distância angular de um ponto específico medido para o leste ao longo do equador celeste.} (RA) e a declinação\footnote{Ângulo que localiza um ponto na esfera celeste no sistema de coordenadas equatoriais.} (DEC).
+As imagens do SDSS foram obtidas usando a \emph{API}\footnote{API: \emph{Application Programming Interface}. É uma interface de comicação entre sistemas.} do SDSS\footnote{Documentação da API: http://skyserver.sdss.org/dr16/en/help/docs/api.aspx.}. Já as imagens do S-PLUS foram obtidas pela contribuição dos algorítmos\footnote{Página do repositório: https://github.com/lucatelli/splus-tools.} de Geferson Lucatelli. A figura \ref{fig:galaxy_grid} é um exemplo das imagens RGB do SDSS.
 
 \begin{figure}[h!]
   \centering
@@ -32,41 +32,47 @@ O catálogo com as classificações estão em um arquivo CSV. Já as imagens for
   \label{fig:galaxy_grid}
 \end{figure}
 
-O algorítmo\cite{cardoso2020} baixa todas as imagens de galáxias que estão no catálogo do GalaxyZoo usando a API do SDSS. A figura \ref{fig:galaxy_grid} contém uma amostra de cinquenta imagens de galáxias obtidas pelo algorítmo.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% DIVISÃO DO CONJUNTO DE DADOS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Divisão do conjunto de dados}
 
-Foram baixadas 108.286 imagens no formato JPG e modelo de cores RGB, cada uma com dimensão de 200x200 pixels e escala de 1,35 arsec/pixel do objeto.
+O conjunto de dados é dividido em três subconjuntos: treinamento, validação e teste. Os dois primeiros são usados durante o treinamento, portanto, são com estes dados que a rede irá aprender, e o subjunto de teste é usado após o treinameto para verificar a generalidade da rede, ou seja, determinar se a rede consegue classificar uma imagem não vista antes.
+
+Todos os modelos usam o mesmo conjunto de dados, para garantir que o desempenho de classificação do modelo não foi afetado pelos dados. Embora a fonte de dados seja diferente entre os modelos, imagens RGB do SDSS para alguns e fluxo de fótons do S-PLUS para outros, ambos os conjunto de dados tem exatamente os mesmos objetos em cada um dos subconjuntos.
+
+Para cada subconjunto, é separada uma quantidade de amostras relativa à quantidade total de cada classe: 72\% para o treino, 18\% para a validação e 10\% para o teste. A tabela \ref{tab:img_qtd} mostra a quantidade de imagens para cada um dos subconjuntos conforme a classe.
+
+\begin{table}[h!]
+  \centering
+
+  \caption{Quantidade de amostras de imagens de galáxias por classe.}
+  \label{tab:img_qtd}
+
+  \renewcommand{\arraystretch}{1.6}
+  \begin{tabular}{ccccc}
+    \toprule
+    \thead{Classe} & \thead{Treinamento                       \\(72\%)} & \thead{Validação\\(18\%)} & \thead{Teste\\(10\%)} & \thead{Total} \\
+    \midrule
+    E              & 4.504              & 1.126 & 625 & 6.255 \\
+    S              & 1.370              & 342   & 190 & 1.902 \\
+    Total          & 5.874              & 1.468 & 815 & 8.157 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PRÉ-PRECESSAMENTO DOS DADOS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Pré-processamento dos dados}
 
-O pré-processamento é a preparação das imagens para serem usadas pelo modelo durante o treinameto. As imagens são separadas em cinco classes: \texttt{Ei}, \texttt{Er}, \texttt{Ec}, \texttt{Ser}, \texttt{Sc2m} e foram agrupadas em três subconjuntos: treinamento, validação e teste.
+O pré-processamento é a preparação das imagens para serem usadas pelo modelo, ou seja, é a transformação dos dados brutos em dados reconhecíveis pela rede. Isso envolve representar as imagens por  matrizes multidimensionais, onde cada elemento da matriz representa um pixel da imagem, e aplicar algumas transformações, especificadas a seguir. Todos os modelos usam imagens do tamanho 64x64 pixels.
 
-\begin{table}[h!]
-  \centering
-  \renewcommand{\arraystretch}{1.6}
-  \begin{tabular}{ccccc}
-    \toprule
-    \thead{Classe} & \thead{Treinamento                            \\(82,5\%)} & \thead{Validação\\(15\%)} & \thead{Teste\\(2,5\%)} & \thead{Total} \\
-    \midrule
-    Ei             & 36.333             & 6.605  & 1.100 & 44.038  \\
-    Er             & 30.331             & 5.514  & 919   & 36.764  \\
-    Ser            & 11.558             & 2.101  & 350   & 14.009  \\
-    Ec             & 8.374              & 1.522  & 253   & 10.149  \\
-    Sc2m           & 2.745              & 498    & 83    & 3.326   \\
-    Total          & 89.341             & 16.240 & 2.705 & 108.286 \\
-    \bottomrule
-  \end{tabular}
-  \caption{Quantidade de amostras de imagens de galáxias por classe.}
-  \label{tab:img_qtd}
-\end{table}
+Como as imagens do SDSS usadas estão no sistema de cor RGB, o tensor de entrada da rede terá dimensão (64, 64, 3). As primeiras duas dimensões são referentes ao comprimento e largura da imagem e a terceira aos três canais de cores RGB.
 
-Para cada subconjunto é separada uma quantidade de amostras relativa à quantidade total de cada classe: sendo 82,5\% para o treino, 15\% para a validação e 2,5\% para o teste. A tabela \ref{tab:img_qtd} mostra a quantidade de imagens para cada um dos subconjuntos conforme a classe.
+Já os dados do S-PLUS não foram processados e para o padrão de cor RGB e, portanto, informações de todas as 12 bandas fotométricas são usadas. Para que seja possível usar uma rede pré-treinada, a entrada é dividida em 4 tensores (64, 64, 3).
 
-Depois de separadas, as imagens precisam ser transformadas em tensores. No sistema RGB, cada cor é representada por três números inteiros no intervalo de 0 a 255. Cada imagem, então, é representada por um tensor de dimensão (200, 200, 3). As primeiras duas dimensões são referentes ao comprimento e largura da imagem e a terceira aos três canais de cores RGB.
-
-Representar uma cor por um terno faz sentido quando se conhece a especificação do sistema de cores RGB, mas isso não é intuituvo para um modelo de rede neural artificial. Por isso, cada número do tensor é reescalado para um número real no intervalo entre zero e um dividindo cada número por 255.
+Todas as imagens são reescaladas para o intervalo [0, 1], dividindo cada elemento pelo valor máximo da imagem. Além disso, para as imagens do S-PLUS, a mediana da imagem é subtraída de cada pixel. Já que a mediana da imagem é uma aproximação do valor do céu.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MODELAGEM DA REDE NEURAL ARTIFICIAL
@@ -77,12 +83,10 @@ A rede neural artificial foi programada em Python e a biblioteca Keras\footnote{
 
 A modelagem é a criação de uma estrutura. Isto inclui: a escolha da quantidade de camadas, a definição do tipo de cada camada e a especificação da sequência em que as camadas aparecerão. Já os hiperparâmetros são os atributos de cada camada ou do modelo em geral. Alguns exemplos de hiperparâmetros são: a taxa de aprendizagem\footnote{A velocidade com que a rede neural aprende os padrões.} (\emph{learning rate}), a quantidade de unidades\footnote{A quantidade de neurônios artificais.} de cada camada e a taxa (\emph{rate}) das camadas \emph{dropout}. Estes ajustes são feitos empiricamente e reajustados de acordo com o resultado obtido após o treinamento, como visto na figura \ref{fig:fluxogram}.
 
-Foram criados dois modelos: um, usando apenas camadas convolucionais e \emph{pooling} ligadas a uma pequena rede densa (figura \ref{fig:conv_model}) e outro, usando uma rede pré-treinada, VGG16, ligada a uma longa rede densa com \emph{dropout} de acordo com o diagrama da figura \ref{fig:pretrained_model}.
-
-Cada modelo representa uma técnica diferente para treinamento de redes neurais. A primeira, que é a mais \emph{canônica}, usa apenas informações do conjunto de treinamento, já a segunda usa pesos definidos de uma rede neural pré-treinada, VGG16.
+Foram criados três modelos: o primeiro, usando apenas camadas convolucionais e \emph{pooling} ligadas a uma pequena rede densa (figura \ref{fig:conv_model}) o segundo, usando uma rede pré-treinada, VGG16, ligada a uma longa rede densa com \emph{dropout} (figura \ref{fig:pretrained_model}) e o terceiro, usando quatro tensores de entrada ligados a uma rede pré-treinada (figura \ref{fig:splus_model}).
 
 \pagebreak
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \centering
   \begin{minipage}[t]{.47\textwidth}
     \centering
@@ -100,43 +104,52 @@ Cada modelo representa uma técnica diferente para treinamento de redes neurais.
 \end{figure}
 \pagebreak
 
+\begin{figure}[h!]
+  \centering
+  \input{figures/splus_model.tex}
+  \caption{\textbf{Modelo 3} -- Três tensores de entrada ligados à rede pre-treinada.}
+  \label{fig:splus_model}
+\end{figure}
+
+\pagebreak
+
 Esta rede VGG16 é treinada usando a base de dados \emph{ImageNet}\footnote{http://www.image-net.org/.}, que possui milhões de imagens de objetos do cotidaino, mas não possui objetos do espaço. A idéia é descobrir que se usar uma rede pré-treinada com milhões de imagens, mas nenhuma de galáxias, é tão relevante quanto usar uma rede treinada com apenas alguns milhares de amostras, mas todas de galáxias. Pois as redes neurais convolucionais são usadas como camada de abstração do mundo visual, ou seja, elas detectam padrões como geometrias, texturas e cores.
 
-Para ambos os modelos, a dimensão do tensor da entrada é (200, 200, 3). Cinco unidades na camada de saída com ativador \texttt{Softmax}. A  função de perda utilizada foi a \texttt{Categorical Crossentropy} e o otimizador foi o \texttt{RMSprop}.
+% Para ambos os modelos, a dimensão do tensor da entrada é (200, 200, 3). Cinco unidades na camada de saída com ativador \texttt{Softmax}. A  função de perda utilizada foi a \texttt{Categorical Crossentropy} e o otimizador foi o \texttt{RMSprop}.
 
-\begin{table}[h!]
-  \centering
-  \begin{tabular}{cc}
-    \toprule
-    \thead{Hiperparâmetro}          & \thead{Valor}     \\
-    \midrule
-    Ativador (Conv2D)               & ReLu              \\
-    Ativador (Dense, 1)             & ReLu              \\
-    Unidades (Conv2D)               & 32, 64, 128 e 128 \\
-    Unidades (Dense, 1)             & 512               \\
-    Dimensão do Kernel (Conv2D)     & (3, 3)            \\
-    \emph{Pool Size} (MaxPooling2D) & (2, 2)            \\
-    Taxa de aprendizagem            & $10^{-4}$         \\
-    \bottomrule
-  \end{tabular}
-  \caption{Descrição dos hiperparâmetros do Modelo 1.}
-  \label{tab:hip_model1}
-\end{table}
+% \begin{table}[h!]
+%   \centering
+%   \begin{tabular}{cc}
+%     \toprule
+%     \thead{Hiperparâmetro}          & \thead{Valor}     \\
+%     \midrule
+%     Ativador (Conv2D)               & ReLu              \\
+%     Ativador (Dense, 1)             & ReLu              \\
+%     Unidades (Conv2D)               & 32, 64, 128 e 128 \\
+%     Unidades (Dense, 1)             & 512               \\
+%     Dimensão do Kernel (Conv2D)     & (3, 3)            \\
+%     \emph{Pool Size} (MaxPooling2D) & (2, 2)            \\
+%     Taxa de aprendizagem            & $10^{-4}$         \\
+%     \bottomrule
+%   \end{tabular}
+%   \caption{Descrição dos hiperparâmetros do Modelo 1.}
+%   \label{tab:hip_model1}
+% \end{table}
 
-\begin{table}[h!]
-  \centering
-  \begin{tabular}{cc}
-    \toprule
-    \thead{Hiperparâmetro} & \thead{Valor}        \\
-    \midrule
-    Ativador (Dense, 1-4)  & ReLu                 \\
-    Unidades (Dense, 1-4)  & 2048, 1024, 512, 256 \\
-    Taxa de \emph{dropout} & 0,5                  \\
-    Taxa de aprendizagem   & $10^{-5}$            \\
-    \bottomrule
-  \end{tabular}
-  \caption{Descrição dos hiperparâmetros do Modelo 2.}
-  \label{tab:hip_model2}
-\end{table}
+% \begin{table}[h!]
+%   \centering
+%   \begin{tabular}{cc}
+%     \toprule
+%     \thead{Hiperparâmetro} & \thead{Valor}        \\
+%     \midrule
+%     Ativador (Dense, 1-4)  & ReLu                 \\
+%     Unidades (Dense, 1-4)  & 2048, 1024, 512, 256 \\
+%     Taxa de \emph{dropout} & 0,5                  \\
+%     Taxa de aprendizagem   & $10^{-5}$            \\
+%     \bottomrule
+%   \end{tabular}
+%   \caption{Descrição dos hiperparâmetros do Modelo 2.}
+%   \label{tab:hip_model2}
+% \end{table}
 
-Como mostrado na figura \ref{fig:fluxogram}, diversos valores de hiperparâmetros foram ajustados empiricamente. As tabelas \ref{tab:hip_model1} e \ref{tab:hip_model2} mostram os valores dos hiperparâmetros com melhor desempenho e que são usados como exemplo nos resultados.
+% Como mostrado na figura \ref{fig:fluxogram}, diversos valores de hiperparâmetros foram ajustados empiricamente. As tabelas \ref{tab:hip_model1} e \ref{tab:hip_model2} mostram os valores dos hiperparâmetros com melhor desempenho e que são usados como exemplo nos resultados.

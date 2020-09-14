@@ -1,21 +1,50 @@
-\section{Resultados Parciais}
-Uma das formas de inspecionar o aprendizado de uma rede neural artificial é pela análise dos gráficos \texttt{Acurácia x Época} e \texttt{Perda x Época}, como das figuras \ref{fig:conv_train} e \ref{fig:pretrained_train}. A análise destes dados permite saber o quanto a rede aprende por época de treinamento. Ela é importante para que saibamos por quantas épocas um modelo suporta ser treinado. Sendo assim, uma forma útil -- mas não única -- de mitigação de \emph{overfiting}\footnote{Excesso ou falta de treinamento de uma rede neural articial.}.
+\section{Resultados}
 
-Pela figura \ref{fig:conv_train}, é visto que o \emph{overfiting} começa na oitava época de treinamento. A partir daí, a curva de perda do conjunto de validação começa a divergir da curva de perda do conjunto de treinamento.
+A tabela \ref{tab:eval} mostra a acurácia do modelo classificando imagens do conjunto de teste.
 
-Já na figura \ref{fig:pretrained_train}, é visto que o \emph{overfiting} começa na décima segunda época de treinamento. No entanto, a acurácia final desta rede é menor que da primeira, mesmo com mais épocas de treinamento.
+\begin{table}[h!]
+  \centering
+
+  \caption{Acurácia no conjunto de teste para os modelos.}
+  \label{tab:eval}
+
+  \begin{tabular}{cc}
+    \toprule
+    Modelo & Acurácia no conjunto de teste \\
+    \midrule
+    1      & 85,32\%                       \\
+    2      & 86,81\%                       \\
+    3      & 83,88\%                       \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+Uma das formas de inspecionar o aprendizado de uma rede neural artificial é pela análise dos gráficos \texttt{Acurácia x Época} e \texttt{Perda x Época}, como das figuras \ref{fig:conv_train}, \ref{fig:pretrained_train} e \ref{fig:splus_train}. A análise destes dados permite saber o quanto a rede aprende por época de treinamento. Ela é importante para que saibamos por quantas épocas um modelo suporta ser treinado. Sendo assim, uma forma útil de mitigação de \emph{overfiting}\footnote{Excesso de treinamento de uma rede neural articial.}.
+
+% Pela figura \ref{fig:conv_train}, é visto que o \emph{overfiting} começa na oitava época de treinamento. A partir daí, a curva de perda do conjunto de validação começa a divergir da curva de perda do conjunto de treinamento.
+
+% Já na figura \ref{fig:pretrained_train}, é visto que o \emph{overfiting} começa na décima segunda época de treinamento. No entanto, a acurácia final desta rede é menor que da primeira, mesmo com mais épocas de treinamento.
+
+\pagebreak
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=.79\textwidth]{figures/conv_train.pdf}
+  \includegraphics[width=.79\textwidth]{figures/conv_train2.pdf}
   \caption{Gráfico da acurácia e perda dos subconjuntos de treino e validação em cada época de treinamento do Modelo 1.}
   \label{fig:conv_train}
 \end{figure}
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=.79\textwidth]{figures/pretrained_train.pdf}
+  \includegraphics[width=.79\textwidth]{figures/pretrained_train2.pdf}
   \caption{Gráfico da acurácia e perda dos subconjuntos de treino e validação em cada época de treinamento do Modelo 2.}
   \label{fig:pretrained_train}
 \end{figure}
-\pagebreak
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=.79\textwidth]{figures/splus_train.pdf}
+  \caption{Gráfico da acurácia e perda dos subconjuntos de treino e validação em cada época de treinamento do Modelo 3.}
+  \label{fig:splus_train}
+\end{figure}
