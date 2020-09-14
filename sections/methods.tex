@@ -61,6 +61,13 @@ Para cada subconjunto, é separada uma quantidade de amostras relativa à quanti
   \end{tabular}
 \end{table}
 
+Como as classes não são balanceadas, ou seja, há uma quantidade de amostra muito maior em uma classe que em outra, pesos foram utilizados em cada classe. O peso $w_i$ da i-ésima classe tem o valor dado pela equação \ref{eq:pesos}.
+\begin{equation}
+  w_i = \frac{Q}{N \times C_i}
+  \label{eq:pesos}
+\end{equation}
+onde, $Q$ é a quantidade total de amostras, $N$ é o número de classes e $C_i$ é o número de amostras da i-ésima classe.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PRÉ-PRECESSAMENTO DOS DADOS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -83,8 +90,6 @@ A rede neural artificial foi programada em Python e a biblioteca Keras\footnote{
 
 A modelagem é a criação de uma estrutura. Isto inclui: a escolha da quantidade de camadas, a definição do tipo de cada camada e a especificação da sequência em que as camadas aparecerão. Já os hiperparâmetros são os atributos de cada camada ou do modelo em geral. Alguns exemplos de hiperparâmetros são: a taxa de aprendizagem\footnote{A velocidade com que a rede neural aprende os padrões.} (\emph{learning rate}), a quantidade de unidades\footnote{A quantidade de neurônios artificais.} de cada camada e a taxa (\emph{rate}) das camadas \emph{dropout}. Estes ajustes são feitos empiricamente e reajustados de acordo com o resultado obtido após o treinamento, como visto na figura \ref{fig:fluxogram}.
 
-Foram criados três modelos: o primeiro, usando apenas camadas convolucionais e \emph{pooling} ligadas a uma pequena rede densa (figura \ref{fig:conv_model}) o segundo, usando uma rede pré-treinada, VGG16, ligada a uma longa rede densa com \emph{dropout} (figura \ref{fig:pretrained_model}) e o terceiro, usando quatro tensores de entrada ligados a uma rede pré-treinada (figura \ref{fig:splus_model}).
-
 \pagebreak
 \begin{figure}[ht!]
   \centering
@@ -103,15 +108,15 @@ Foram criados três modelos: o primeiro, usando apenas camadas convolucionais e 
   \end{minipage}
 \end{figure}
 \pagebreak
-
 \begin{figure}[h!]
   \centering
   \input{figures/splus_model.tex}
   \caption{\textbf{Modelo 3} -- Três tensores de entrada ligados à rede pre-treinada.}
   \label{fig:splus_model}
 \end{figure}
-
 \pagebreak
+
+Foram criados três modelos: o primeiro, usando apenas camadas convolucionais e \emph{pooling} ligadas a uma pequena rede densa (figura \ref{fig:conv_model}) o segundo, usando uma rede pré-treinada, VGG16, ligada a uma longa rede densa com \emph{dropout} (figura \ref{fig:pretrained_model}) e o terceiro, usando quatro tensores de entrada ligados a uma rede pré-treinada (figura \ref{fig:splus_model}).
 
 Esta rede VGG16 é treinada usando a base de dados \emph{ImageNet}\footnote{http://www.image-net.org/.}, que possui milhões de imagens de objetos do cotidaino, mas não possui objetos do espaço. A idéia é descobrir que se usar uma rede pré-treinada com milhões de imagens, mas nenhuma de galáxias, é tão relevante quanto usar uma rede treinada com apenas alguns milhares de amostras, mas todas de galáxias. Pois as redes neurais convolucionais são usadas como camada de abstração do mundo visual, ou seja, elas detectam padrões como geometrias, texturas e cores.
 
